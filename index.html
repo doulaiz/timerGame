@@ -175,7 +175,7 @@
    <script>
       // --- Timer Game Logic ---
       let timer = null;
-      let timerDuration = 45;  // default time 20s
+      let timerDuration = 20;  // default time 20s
       let timeLeft = timerDuration;
       let flashing = false;
       const flashThreshold = 5;
@@ -198,7 +198,7 @@
 
       function updateTimerBar() {
          if (timeLeft > 0 && timeLeft <= timerDuration) {
-            const percent = timeLeft / timerDuration;
+            const percent = (timeLeft - 1) / (timerDuration - 1);
             timerBar.style.height = (percent * 100) + 'vh';
             timerBar.style.opacity = '1';
          } else {
@@ -215,7 +215,7 @@
          timerBar.style.transition = 'none';
          setTimeout(() => {
             timerBar.style.transition = 'height 1s linear';
-         }, 1000);
+         }, 20);
          updateTitle();
          updateTimerBar();
          startTimer();
