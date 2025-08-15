@@ -11,7 +11,7 @@
          --flash-bg: #ffba3b;
          --timeout-bg: #fd5151;
          --bar-color: #4caf50;
-         --modal-bg: #222;
+         --modal-bg: #666;
          --modal-shadow: 0 2px 16px #0006;
          --accent: #4caf50;
          --text: #fff;
@@ -111,6 +111,10 @@
          z-index: 10001;
          align-items: center;
          justify-content: center;
+      }
+
+      #modalTitle {
+         color: #fff;
       }
 
       .modal {
@@ -262,6 +266,8 @@
       }
 
       body.addEventListener('click', (e) => {
+         // if modal open, ignore clicks
+         if (modalOverlay.style.display === 'flex') return;
          // If timeout, ignore screen clicks (only restartBtn works)
          let timeoutActive = (timeLeft <= 0);
          // Ripple effect
