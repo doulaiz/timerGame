@@ -17,6 +17,7 @@
          --text: #fff;
          --ripple: rgba(122, 238, 122, 0.5);
       }
+
       body {
          margin: 0;
          min-height: 100vh;
@@ -24,16 +25,25 @@
          transition: background 0.2s;
          font-family: system-ui, sans-serif;
       }
+
       .flash {
          animation: flash-bg 0.2s alternate 3;
       }
+
       @keyframes flash-bg {
-         from { background: var(--main-bg); }
-         to { background: var(--flash-bg); }
+         from {
+            background: var(--main-bg);
+         }
+
+         to {
+            background: var(--flash-bg);
+         }
       }
+
       .timeout {
          background: var(--timeout-bg) !important;
       }
+
       .center-message {
          position: absolute;
          top: 50%;
@@ -45,6 +55,7 @@
          user-select: none;
          z-index: 10;
       }
+
       #timerBar {
          position: fixed;
          left: 0;
@@ -53,10 +64,11 @@
          height: 0;
          background: var(--bar-color);
          z-index: 5;
-         transition: height 1s linear, opacity 0.3s linear;
+         transition: height 1s linear;
          border-radius: 3px;
          opacity: 0.5;
       }
+
       .ripple {
          position: absolute;
          border-radius: 50%;
@@ -66,12 +78,14 @@
          pointer-events: none;
          z-index: 9999;
       }
+
       @keyframes ripple-anim {
          to {
             transform: scale(2);
             opacity: 0;
          }
       }
+
       #settingsBtn {
          position: fixed;
          top: 20px;
@@ -85,6 +99,7 @@
          cursor: pointer;
          font-size: 1.1rem;
       }
+
       #modalOverlay {
          display: none;
          position: fixed;
@@ -92,11 +107,12 @@
          left: 0;
          width: 100vw;
          height: 100vh;
-         background: rgba(0,0,0,0.5);
+         background: rgba(0, 0, 0, 0.5);
          z-index: 10001;
          align-items: center;
          justify-content: center;
       }
+
       .modal {
          background: var(--modal-bg);
          padding: 32px 24px;
@@ -107,6 +123,7 @@
          text-align: center;
          position: relative;
       }
+
       #closeModal {
          position: absolute;
          top: 10px;
@@ -117,6 +134,7 @@
          font-size: 1.3rem;
          cursor: pointer;
       }
+
       #durationInput {
          width: 80px;
          font-size: 1.2rem;
@@ -125,6 +143,7 @@
          border: 1px solid #888;
          margin-bottom: 10px;
       }
+
       #saveDuration {
          padding: 6px 18px;
          border: none;
@@ -151,7 +170,8 @@
          <button id="saveDuration">Save</button>
       </div>
    </div>
-   <audio id="waterDropSound" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae5b2.mp3" preload="auto"></audio>
+   <audio id="waterDropSound" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae5b2.mp3"
+      preload="auto"></audio>
    <script>
       // --- Timer Game Logic ---
       let timer = null;
@@ -194,6 +214,10 @@
          timeLeft = timerDuration;
          body.classList.remove('timeout', 'flash');
          message.textContent = '';
+         timerBar.style.transition = 'none';
+         setTimeout(() => {
+            timerBar.style.transition = 'height 1s linear;';
+         }, 20);
          updateTitle();
          updateTimerBar();
          startTimer();
@@ -233,11 +257,6 @@
       }
 
       body.addEventListener('click', (e) => {
-         // Show timer bar on click
-         if (timerBar.style.height === '0px' || timerBar.style.height === '' || timerBar.style.opacity === '0.5') {
-            timerBar.style.opacity = '1';
-            timerBar.style.height = '100vh';
-         }
          // Ripple effect
          const ripple = document.createElement('span');
          ripple.className = 'ripple';
