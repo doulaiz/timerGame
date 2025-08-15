@@ -170,8 +170,6 @@
          <button id="saveDuration">Save</button>
       </div>
    </div>
-   <audio id="waterDropSound" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae5b2.mp3"
-      preload="auto"></audio>
    <script>
       // --- Timer Game Logic ---
       let timer = null;
@@ -188,7 +186,6 @@
       const closeModal = document.getElementById('closeModal');
       const durationInput = document.getElementById('durationInput');
       const saveDuration = document.getElementById('saveDuration');
-      const waterDropSound = document.getElementById('waterDropSound');
 
       function updateTitle() {
          if (timeLeft > 0) {
@@ -217,7 +214,7 @@
          timerBar.style.transition = 'none';
          setTimeout(() => {
             timerBar.style.transition = 'height 1s linear;';
-         }, 20);
+         }, 1000);
          updateTitle();
          updateTimerBar();
          startTimer();
@@ -249,13 +246,6 @@
          }, 1000);
       }
 
-      function playWaterDrop() {
-         if (waterDropSound) {
-            waterDropSound.currentTime = 0;
-            waterDropSound.play();
-         }
-      }
-
       body.addEventListener('click', (e) => {
          // Ripple effect
          const ripple = document.createElement('span');
@@ -267,8 +257,6 @@
          ripple.style.position = 'fixed';
          document.body.appendChild(ripple);
          ripple.addEventListener('animationend', () => ripple.remove());
-
-         playWaterDrop();
 
          if (timeLeft <= 0) {
             if (!afterTimeout) {
