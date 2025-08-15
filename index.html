@@ -154,9 +154,11 @@
          cursor: pointer;
       }
    </style>
+
+   <script src="NoSleep.min.js"></script>
 </head>
 
-<body>
+<body onload="on_load()">
    <div id="timerBar"></div>
    <button id="settingsBtn" aria-label="Open timer settings">⏱️</button>
    <div class="center-message" id="message">Ready</div>
@@ -313,6 +315,11 @@
       });
       // Set initial title
       document.title = 'Timer Game';
+
+      function on_load() {
+         var noSleep = new NoSleep();
+         noSleep.enable(); // keep the screen on!
+      }
    </script>
 </body>
 
