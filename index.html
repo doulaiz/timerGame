@@ -126,6 +126,7 @@
          max-width: 90vw;
          text-align: center;
          position: relative;
+         margin-top: -40vh;
       }
 
       #closeModal {
@@ -184,7 +185,7 @@
       let timerDuration = 20;  // default time 20s
       let timeLeft = timerDuration;
       let flashing = false;
-      const flashThreshold = 5;
+      let flashThreshold = 5;
       const message = document.getElementById('message');
       const body = document.body;
       const settingsBtn = document.getElementById('settingsBtn');
@@ -289,6 +290,7 @@
          }
          if (timeoutActive) return;
          resetTimer();
+
       });
 
       if (restartBtn) {
@@ -319,6 +321,7 @@
          if (val > 600) val = 600;
          timerDuration = val;
          modalOverlay.style.display = 'none';
+         flashThreshold = Math.min(timerDuration / 3, 5);
          resetTimer();
       });
 
