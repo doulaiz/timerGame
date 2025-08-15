@@ -160,6 +160,8 @@
    <div id="timerBar"></div>
    <button id="settingsBtn" aria-label="Open timer settings">⏱️</button>
    <div class="center-message" id="message">Ready</div>
+   <button id="restartBtn"
+      style="display:none;position:absolute;top:90%;left:50%;transform:translate(-50%,0);padding:8px 20px;font-size:0.9rem;background:#6ed472;color:#fff;border:none;border-radius:6px;z-index:20;cursor:pointer;box-shadow:0 2px 8px #0003;">Restart</button>
    <div id="modalOverlay">
       <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
          <button id="closeModal" aria-label="Close settings">✖</button>
@@ -173,10 +175,9 @@
    <script>
       // --- Timer Game Logic ---
       let timer = null;
-      let timerDuration = 20;
-      let timeLeft = 20;
+      let timerDuration = 45;  // default time 20s
+      let timeLeft = timerDuration;
       let flashing = false;
-      let afterTimeout = false;
       const flashThreshold = 5;
       const message = document.getElementById('message');
       const body = document.body;
@@ -241,15 +242,26 @@
                message.textContent = '';
                updateTitle();
                updateTimerBar();
-               afterTimeout = false;
+               setTimeout(() => {
+                  restartBtn.style.display = 'block';
+                  restartBtn.style.opacity = '0';
+                  restartBtn.style.transition = 'opacity 0.6s';
+                  setTimeout(() => {
+                     restartBtn.style.opacity = '1';
+                  }, 10);
+               }, 2000);
             }
          }, 1000);
       }
 
       body.addEventListener('click', (e) => {
+         // If timeout, ignore screen clicks (only restartBtn works)
+         let timeoutActive = (timeLeft <= 0);
          // Ripple effect
+         const rippleColor = timeoutActive ? 'rgba(128,0,255,0.5)' : 'rgba(122, 238, 122, 0.5)';
          const ripple = document.createElement('span');
          ripple.className = 'ripple';
+         ripple.style.background = rippleColor;
          const size = Math.max(window.innerWidth, window.innerHeight);
          ripple.style.width = ripple.style.height = size + 'px';
          ripple.style.left = (e.clientX - size / 2) + 'px';
@@ -258,22 +270,16 @@
          document.body.appendChild(ripple);
          ripple.addEventListener('animationend', () => ripple.remove());
 
-         if (timeLeft <= 0) {
-            if (!afterTimeout) {
-               // First click after timeout: reset to Ready
-               message.textContent = 'Ready';
-               body.classList.remove('timeout');
-               afterTimeout = true;
-            } else {
-               // Second click: restart timer
-               afterTimeout = false;
-               resetTimer();
-            }
-            return;
-         }
-         // Normal click: always restart timer
+         if (timeoutActive) return;
          resetTimer();
       });
+
+      if (restartBtn) {
+         restartBtn.addEventListener('click', () => {
+            restartBtn.style.display = 'none';
+            resetTimer();
+         });
+      }
 
       // Modal logic
       settingsBtn.addEventListener('click', (e) => {
