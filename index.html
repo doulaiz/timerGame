@@ -66,6 +66,7 @@
     let timerDuration = 30;
     let timeLeft = 30;
     let flashing = false;
+let afterTimeout = false;
     const flashThreshold = 5; // seconds before end to start flashing
     const message = document.getElementById('message');
     const body = document.body;
@@ -110,6 +111,7 @@
                     body.classList.add('timeout');
                     message.textContent = '';
                     updateTitle();
+                    afterTimeout = false;
                 }
             }, 1000);
         }
@@ -126,13 +128,21 @@
             document.body.appendChild(ripple);
             ripple.addEventListener('animationend', () => ripple.remove());
 
-            if (!timer || timeLeft <= 0) {
-                message.textContent = '';
-                body.classList.remove('timeout');
-                resetTimer();
-            } else {
-                resetTimer();
+            if (timeLeft <= 0) {
+                if (!afterTimeout) {
+                    // First click after timeout: reset to Ready
+                    message.textContent = 'Ready';
+                    body.classList.remove('timeout');
+                    afterTimeout = true;
+                } else {
+                    // Second click: restart timer
+                    afterTimeout = false;
+                    resetTimer();
+                }
+                return;
             }
+            // Normal click: always restart timer
+            resetTimer();
         });
         // Modal logic
         settingsBtn.addEventListener('click', (e) => {
