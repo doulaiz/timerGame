@@ -6,92 +6,178 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Timer Game</title>
    <style>
+      :root {
+         --main-bg: #222;
+         --flash-bg: #ffba3b;
+         --timeout-bg: #fd5151;
+         --bar-color: #4caf50;
+         --modal-bg: #222;
+         --modal-shadow: 0 2px 16px #0006;
+         --accent: #4caf50;
+         --text: #fff;
+         --ripple: rgba(122, 238, 122, 0.5);
+      }
       body {
          margin: 0;
-         height: 100vh;
-         background: #222;
+         min-height: 100vh;
+         background: var(--main-bg);
          transition: background 0.2s;
+         font-family: system-ui, sans-serif;
       }
-
       .flash {
          animation: flash-bg 0.2s alternate 3;
       }
-
       @keyframes flash-bg {
-         from {
-            background: #222;
-         }
-
-         to {
-            background: #ffba3b;
-         }
+         from { background: var(--main-bg); }
+         to { background: var(--flash-bg); }
       }
-
       .timeout {
-         background: #fd5151 !important;
+         background: var(--timeout-bg) !important;
       }
-
       .center-message {
          position: absolute;
          top: 50%;
          left: 50%;
          transform: translate(-50%, -50%);
-         color: #fff;
+         color: var(--text);
          font-size: 2rem;
          text-align: center;
          user-select: none;
+         z-index: 10;
       }
-
+      #timerBar {
+         position: fixed;
+         left: 0;
+         bottom: 0;
+         width: 8px;
+         height: 0;
+         background: var(--bar-color);
+         z-index: 5;
+         transition: height 1s linear, opacity 0.3s linear;
+         border-radius: 3px;
+         opacity: 0.5;
+      }
       .ripple {
          position: absolute;
          border-radius: 50%;
          transform: scale(0);
          animation: ripple-anim 0.6s linear;
-         background: rgba(122, 238, 122, 0.5);
+         background: var(--ripple);
          pointer-events: none;
          z-index: 9999;
       }
-
       @keyframes ripple-anim {
          to {
             transform: scale(2);
             opacity: 0;
          }
       }
+      #settingsBtn {
+         position: fixed;
+         top: 20px;
+         right: 20px;
+         z-index: 10000;
+         padding: 8px 14px;
+         border: none;
+         border-radius: 6px;
+         background: #444;
+         color: var(--text);
+         cursor: pointer;
+         font-size: 1.1rem;
+      }
+      #modalOverlay {
+         display: none;
+         position: fixed;
+         top: 0;
+         left: 0;
+         width: 100vw;
+         height: 100vh;
+         background: rgba(0,0,0,0.5);
+         z-index: 10001;
+         align-items: center;
+         justify-content: center;
+      }
+      .modal {
+         background: var(--modal-bg);
+         padding: 32px 24px;
+         border-radius: 12px;
+         box-shadow: var(--modal-shadow);
+         min-width: 260px;
+         max-width: 90vw;
+         text-align: center;
+         position: relative;
+      }
+      #closeModal {
+         position: absolute;
+         top: 10px;
+         right: 10px;
+         background: none;
+         border: none;
+         color: var(--text);
+         font-size: 1.3rem;
+         cursor: pointer;
+      }
+      #durationInput {
+         width: 80px;
+         font-size: 1.2rem;
+         padding: 4px 8px;
+         border-radius: 4px;
+         border: 1px solid #888;
+         margin-bottom: 10px;
+      }
+      #saveDuration {
+         padding: 6px 18px;
+         border: none;
+         border-radius: 6px;
+         background: var(--accent);
+         color: var(--text);
+         font-size: 1.1rem;
+         cursor: pointer;
+      }
    </style>
 </head>
 
 <body>
-   <div id="timerBar" style="position:fixed;left:0;bottom:0;width:6px;height:0;background:#4caf50;z-index:9998;transition:height 1s linear, opacity 0.3s linear;border-radius:3px;"></div>
-   <button id="settingsBtn"
-      style="position:fixed;top:20px;right:20px;z-index:10000;padding:8px 14px;border:none;border-radius:6px;background:#444;color:#fff;cursor:pointer;font-size:1.1rem;">⏱️</button>
+   <div id="timerBar"></div>
+   <button id="settingsBtn" aria-label="Open timer settings">⏱️</button>
    <div class="center-message" id="message">Ready</div>
-   <div id="modalOverlay"
-      style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);z-index:10001;align-items:center;justify-content:center;">
-      <div
-         style="background:#222;padding:32px 24px;border-radius:12px;box-shadow:0 2px 16px #0006;min-width:260px;max-width:90vw;text-align:center;position:relative;">
-         <button id="closeModal"
-            style="position:absolute;top:10px;right:10px;background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer;">✖</button>
-         <h2 style="color:#fff;margin-top:0;">Timer Duration</h2>
-         <input id="durationInput" type="number" min="5" max="600" value="30"
-            style="width:80px;font-size:1.2rem;padding:4px 8px;border-radius:4px;border:1px solid #888;" />
+   <div id="modalOverlay">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+         <button id="closeModal" aria-label="Close settings">✖</button>
+         <h2 id="modalTitle">Timer Duration</h2>
+         <input id="durationInput" type="number" min="5" max="600" value="30" />
          <span style="color:#fff;font-size:1.1rem;">seconds</span>
          <br><br>
-         <button id="saveDuration"
-            style="padding:6px 18px;border:none;border-radius:6px;background:#4caf50;color:#fff;font-size:1.1rem;cursor:pointer;">Save</button>
+         <button id="saveDuration">Save</button>
       </div>
    </div>
+   <audio id="waterDropSound" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae5b2.mp3" preload="auto"></audio>
    <script>
+      // --- Timer Game Logic ---
       let timer = null;
       let timerDuration = 30;
       let timeLeft = 30;
       let flashing = false;
       let afterTimeout = false;
-      const flashThreshold = 5; // seconds before end to start flashing
+      const flashThreshold = 5;
       const message = document.getElementById('message');
       const body = document.body;
-   const settingsBtn = document.getElementById('settingsBtn');
-   const timerBar = document.getElementById('timerBar');
+      const settingsBtn = document.getElementById('settingsBtn');
+      const timerBar = document.getElementById('timerBar');
+      const modalOverlay = document.getElementById('modalOverlay');
+      const closeModal = document.getElementById('closeModal');
+      const durationInput = document.getElementById('durationInput');
+      const saveDuration = document.getElementById('saveDuration');
+      const waterDropSound = document.getElementById('waterDropSound');
+
+      function updateTitle() {
+         if (timeLeft > 0) {
+            document.title = `⏳ ${timeLeft}`;
+         } else {
+            document.title = '⏰';
+         }
+      }
+
       function updateTimerBar() {
          if (timeLeft > 0 && timeLeft <= timerDuration) {
             const percent = timeLeft / timerDuration;
@@ -100,18 +186,6 @@
          } else {
             timerBar.style.height = '0';
             timerBar.style.opacity = '0.5';
-         }
-      }
-      const modalOverlay = document.getElementById('modalOverlay');
-      const closeModal = document.getElementById('closeModal');
-      const durationInput = document.getElementById('durationInput');
-      const saveDuration = document.getElementById('saveDuration');
-
-      function updateTitle() {
-         if (timeLeft > 0) {
-            document.title = `⏳ ${timeLeft}`;
-         } else {
-            document.title = '⏰';
          }
       }
 
@@ -151,6 +225,13 @@
          }, 1000);
       }
 
+      function playWaterDrop() {
+         if (waterDropSound) {
+            waterDropSound.currentTime = 0;
+            waterDropSound.play();
+         }
+      }
+
       body.addEventListener('click', (e) => {
          // Show timer bar on click
          if (timerBar.style.height === '0px' || timerBar.style.height === '' || timerBar.style.opacity === '0.5') {
@@ -168,6 +249,8 @@
          document.body.appendChild(ripple);
          ripple.addEventListener('animationend', () => ripple.remove());
 
+         playWaterDrop();
+
          if (timeLeft <= 0) {
             if (!afterTimeout) {
                // First click after timeout: reset to Ready
@@ -184,11 +267,13 @@
          // Normal click: always restart timer
          resetTimer();
       });
+
       // Modal logic
       settingsBtn.addEventListener('click', (e) => {
          e.stopPropagation();
          durationInput.value = timerDuration;
          modalOverlay.style.display = 'flex';
+         durationInput.focus();
       });
       closeModal.addEventListener('click', (e) => {
          e.stopPropagation();
@@ -205,6 +290,13 @@
          timerDuration = val;
          modalOverlay.style.display = 'none';
          resetTimer();
+      });
+
+      // Keyboard accessibility for modal
+      durationInput.addEventListener('keydown', (e) => {
+         if (e.key === 'Enter') {
+            saveDuration.click();
+         }
       });
       // Set initial title
       document.title = 'Timer Game';
