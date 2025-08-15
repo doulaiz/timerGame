@@ -244,6 +244,10 @@
                message.textContent = '';
                updateTitle();
                updateTimerBar();
+               // Play end sound
+               const audio = new Audio('sound/end.mp3');
+               audio.play();
+               console.log('Time is up!');
                setTimeout(() => {
                   restartBtn.style.display = 'block';
                   restartBtn.style.opacity = '0';
@@ -252,6 +256,7 @@
                      restartBtn.style.opacity = '1';
                   }, 10);
                }, 2000);
+               message.textContent = 'You lose!';
             }
          }, 1000);
       }
@@ -272,6 +277,10 @@
          document.body.appendChild(ripple);
          ripple.addEventListener('animationend', () => ripple.remove());
 
+         if (!timeoutActive) {
+            const clickAudio = new Audio('sound/click.mp3');
+            clickAudio.play();
+         }
          if (timeoutActive) return;
          resetTimer();
       });
