@@ -186,6 +186,7 @@
          <button id="closeModal" aria-label="Close settings">✖</button>
          <h2 id="modalTitle">Timer Duration</h2>
          <input id="durationInput" type="number" min="5" max="60" value="20" />
+
          <span style="color:#fff;font-size:1.1rem;">seconds</span>
          <br><br>
          <button id="saveDuration">Save</button>
@@ -194,10 +195,10 @@
    <script>
       // --- Timer Game Logic ---
       let timer = null;
-      let timerDuration = 20;  // default time 20s
+      let timerDuration = parseInt(localStorage.getItem('timerDuration')) || 20;
       let timeLeft = timerDuration;
       let flashing = false;
-      let flashThreshold = 5;
+      let flashThreshold = Math.min(timerDuration / 3, 5);
       const message = document.getElementById('message');
       const body = document.body;
       const settingsBtn = document.getElementById('settingsBtn');
@@ -206,7 +207,9 @@
       const closeModal = document.getElementById('closeModal');
       const durationInput = document.getElementById('durationInput');
       const saveDuration = document.getElementById('saveDuration');
-
+      if (timerDuration) {
+         document.getElementById('durationInput').value = timerDuration;
+      }
       function updateTitle() {
          if (timeLeft > 0) {
             document.title = `⏳ ${timeLeft}`;
@@ -331,6 +334,7 @@
          if (isNaN(val) || val < 5) val = 5;
          if (val > 600) val = 600;
          timerDuration = val;
+         localStorage.setItem('timerDuration', timerDuration);
          modalOverlay.style.display = 'none';
          flashThreshold = Math.min(timerDuration / 3, 5);
          resetTimer();
