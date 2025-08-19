@@ -276,7 +276,7 @@
                      restartBtn.style.opacity = '1';
                   }, 10);
                }, 2000);
-               message.textContent = "sentiment_sad";
+               message.textContent = "sentiment_very_dissatisfied";
             }
          }, 1000);
       }
@@ -309,7 +309,16 @@
 
       if (restartBtn) {
          restartBtn.addEventListener('click', () => {
-            restartBtn.style.display = 'none';
+            restartBtn.style.opacity = '0';
+            restartBtn.style.transform = 'scale(8) translate(-6.25%, 0)';
+            restartBtn.style.transition = 'transform 2s linear, opacity 2s';
+
+            setTimeout(() => {
+               restartBtn.style.display = 'none';
+               restartBtn.style.opacity = '1';
+               restartBtn.style.transform = 'scale(1) translate(-50%, 0)';
+            }, 2500);
+
             resetTimer();
          });
       }
