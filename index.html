@@ -64,7 +64,7 @@
          height: 0;
          background: var(--bar-color);
          z-index: 5;
-         transition: height 1s linear;
+         transition: height 0.1s linear;
          border-radius: 3px;
          opacity: 0.5;
       }
@@ -216,8 +216,8 @@
          document.getElementById('durationInput').value = timerDuration;
       }
       function updateTitle() {
-         if (timeLeft > 0) {
-            document.title = `⏳ ${timeLeft}`;
+          if (timeLeft > 0) {
+            document.title = `⏳ ${timeLeft.toFixed(1)}`;
          } else {
             document.title = '⏰';
          }
@@ -225,7 +225,7 @@
 
       function updateTimerBar() {
          if (timeLeft > 0 && timeLeft <= timerDuration) {
-            const percent = (timeLeft - 1) / (timerDuration - 1);
+            const percent = timeLeft/timerDuration;
             timerBar.style.height = (percent * 100) + 'vh';
             timerBar.style.opacity = '1';
          } else {
@@ -241,7 +241,7 @@
          message.textContent = '';
          timerBar.style.transition = 'none';
          setTimeout(() => {
-            timerBar.style.transition = 'height 1s linear';
+            timerBar.style.transition = 'height 0.1s linear';
          }, 20);
          updateTitle();
          updateTimerBar();
@@ -256,7 +256,7 @@
          updateTitle();
          updateTimerBar();
          timer = setInterval(() => {
-            timeLeft--;
+            timeLeft -= 0.100;
             updateTitle();
             updateTimerBar();
             if (timeLeft <= flashThreshold && timeLeft > 0 && !flashing) {
@@ -287,7 +287,7 @@
                }, 2000);
                message.textContent = "sentiment_very_dissatisfied";
             }
-         }, 1000);
+         }, 100);
       }
 
       body.addEventListener('click', (e) => {
