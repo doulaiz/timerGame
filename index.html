@@ -88,16 +88,20 @@
 
       .myBtn {
          position: fixed;
-         top: 20px;
-         right: 20px;
          z-index: 10000;
-         padding: 8px 14px;
          border: none;
          background: none;
          color: var(--text);
          cursor: pointer;
          font-size: 1.1rem;
       }
+
+      #settingsBtn {
+         top: 20px;
+         right: 20px;
+         padding: 8px 14px;
+      }
+
 
       #modalOverlay {
          display: none;
@@ -207,6 +211,7 @@
       const closeModal = document.getElementById('closeModal');
       const durationInput = document.getElementById('durationInput');
       const saveDuration = document.getElementById('saveDuration');
+      const restartBtn = document.getElementById('restartBtn');
       if (timerDuration) {
          document.getElementById('durationInput').value = timerDuration;
       }
@@ -310,7 +315,7 @@
       if (restartBtn) {
          restartBtn.addEventListener('click', () => {
             restartBtn.style.opacity = '0';
-            restartBtn.style.transform = 'scale(8) translate(-6.25%, 0)';
+            restartBtn.style.transform = 'scale(8) translate(-6.25%, -50%)';
             restartBtn.style.transition = 'transform 2s linear, opacity 2s';
 
             setTimeout(() => {
