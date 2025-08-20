@@ -234,7 +234,7 @@
          }
       }
 
-      function resetTimer() {
+      function resetTimer(start_time = false) {
          if (timer) clearInterval(timer);
          timeLeft = timerDuration;
          body.classList.remove('timeout', 'flash');
@@ -245,7 +245,11 @@
          }, 20);
          updateTitle();
          updateTimerBar();
-         startTimer();
+         if (!!start_time) {
+            startTimer();
+         } else {
+            message.textContent = 'timer';
+         }
       }
 
       function startTimer() {
@@ -309,24 +313,22 @@
             clickAudio.play();
          }
          if (timeoutActive) return;
-         resetTimer();
+         resetTimer(true);
       });
 
-      if (restartBtn) {
-         restartBtn.addEventListener('click', () => {
-            restartBtn.style.opacity = '0';
-            restartBtn.style.transform = 'scale(8) translate(-6.25%, -50%)';
-            restartBtn.style.transition = 'transform 2s linear, opacity 2s';
+      restartBtn.addEventListener('click', (e) => {
+         e.stopPropagation();
+         restartBtn.style.opacity = '0';
+         restartBtn.style.transform = 'scale(8) translate(-6.25%, -50%)';
+         restartBtn.style.transition = 'transform 2s linear, opacity 2s';
 
-            setTimeout(() => {
-               restartBtn.style.display = 'none';
-               restartBtn.style.opacity = '1';
-               restartBtn.style.transform = 'scale(1) translate(-50%, 0)';
-            }, 2500);
-
-            resetTimer();
-         });
-      }
+         setTimeout(() => {
+            restartBtn.style.display = 'none';
+            restartBtn.style.opacity = '1';
+            restartBtn.style.transform = 'scale(1) translate(-50%, 0)';
+         }, 2500);
+         resetTimer(false);
+      });
 
       // Modal logic
       settingsBtn.addEventListener('click', (e) => {
@@ -351,7 +353,7 @@
          localStorage.setItem('timerDuration', timerDuration);
          modalOverlay.style.display = 'none';
          flashThreshold = Math.min(timerDuration / 3, 5);
-         resetTimer();
+         resetTimer(true);
       });
 
       // Keyboard accessibility for modal
