@@ -10,10 +10,8 @@ https://doulaiz.github.io/timerGame/
 - Timer duration is configurable via the settings in the top right.
 - The left vertical bar shrinks as time passes, giving a discreet visual cue.
 - The screen flashes as the timer nears zero, and turns red if you run out of time.
-- After timeout, reset the state and restart the timer.
+- After timeout, reset the game and restart the timer.
 
 ## Credits
-- UI and code: vibe-coded with GitHub Copilot
+- UI and code: Initially vibe-coded with GitHub Copilot, but then fine-tuned manually.
 
----
-> This project was created in a flow state with the help of GitHub Copilot. Enjoy the vibe!
