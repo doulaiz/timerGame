@@ -320,13 +320,13 @@
          e.stopPropagation();
          restartBtn.style.opacity = '0';
          restartBtn.style.transform = 'scale(8) translate(-6.25%, -50%)';
-         restartBtn.style.transition = 'transform 2s linear, opacity 2s';
+         restartBtn.style.transition = 'transform 1.5s linear, opacity 1.5s';
 
          setTimeout(() => {
             restartBtn.style.display = 'none';
             restartBtn.style.opacity = '1';
             restartBtn.style.transform = 'scale(1) translate(-50%, 0)';
-         }, 2500);
+         }, 1500);
          resetTimer(false);
       });
 
